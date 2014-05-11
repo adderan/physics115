@@ -1,0 +1,9 @@
+#include <math.h>
+#include <stdio.h>
+
+
+double f(double x) {
+	return x*x - 2;
+}
+
+main() {

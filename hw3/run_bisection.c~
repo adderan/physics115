@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+
+main() {
+	double a1 = -100.0;
+	double b1 = bracketRoot(f, a1, 0.5);
+	double a2 = b1;
+	double b2 = bracketRoot(f, a2, 0.5);
+	//printf(" %f %f %f %f \n", a1, b1, a2, b2);
+	double r1 = bisection(f, a1, b1, 1.e-5);
+	printf("Root 1 at x = %3.4f \n", r1);
+	double r2 = bisection(f, a2, b2, 1.e-5);
+	printf("Root 2 at x = %3.4f \n", r2);
+}
+	

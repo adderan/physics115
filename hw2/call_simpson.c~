@@ -1,0 +1,11 @@
+#include <stdio.h>
+
+double f(double x) {
+	return exp(-x)*sin(x);
+}
+
+main() {
+
+	printf("         h        ans       (ans - prev_answer)");
+	interval_doubling(simpson(
+		

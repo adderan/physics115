@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <math.h>
+
+double f(double x, double y) {
+	return 1 + y*y;
+}
+
+main() {
+	int i;
+	int n = 2;
+	printf("Intervals    Yn      |tan(pi/4) - Y(n)| \n");
+	for(i = 0; i < 10; i++) {
+		double Yn = rk2(f, x0, y0, 0.7853981, n);
+		printf(" %d   %12.6f   %12.6f \n", n, Yn, fabs(1 - Yn));
+		n = n*2;
+	}

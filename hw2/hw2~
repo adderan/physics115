@@ -1,0 +1,160 @@
+double trap (double f(double), double a, double b, int n) {
+	double h, sum;
+	int i;
+	h = (b-a)/n;
+	sum = 0.5 * (f(a) + f(b));
+	for(i = 1; i < n; i++) {
+		sum += f(a + i*h);
+	}
+	return h * sum;
+}
+
+----------------------------------------
+#include <math.h>
+
+#include <stdio.h>
+
+double f(double x) {
+	return 1/(1 + x);
+}
+
+main() {
+	double x, a, b, h, exact, ans, trap();
+
+	int i, n, iter, ITERMAX;
+
+	exact = log((double) 2.0);
+	ITERMAX = 8;
+	b = 1.0;
+	a = 0;
+
+	printf("        h           ans      (exact-ans)/h^2 \n");
+	n = 1;
+	for (iter = 0; iter < ITERMAX; iter++) {
+		h = (b - a)/n;
+		ans = trap(f, a, b, n);
+		n *= 2;
+		printf("%12.5f %12.5f %12.5f \n", h, ans, (ans - exact)/(h*h));
+	}
+}
+
+Output:
+
+        h           ans      (exact-ans)/h^2 
+     1.00000      0.75000      0.05685 
+     0.50000      0.70833      0.06074 
+     0.25000      0.69702      0.06203 
+     0.12500      0.69412      0.06238 
+     0.06250      0.69339      0.06247 
+     0.03125      0.69321      0.06249 
+     0.01562      0.69316      0.06250 
+     0.00781      0.69315      0.06250 
+
+=============================================================
+
+#include <stdio.h>
+#include <math.h>
+
+double f(double x) {
+	return exp(-x)*sin(x);
+}
+
+
+double simpson(double f(double), double a, double b, int n) {
+
+	double h = (b-a)/n;
+	double sum = 0.0;
+	int i;
+	//sum = ((double)1/6) * (f(a) + 4*f((a+b)/2) + f(b));
+
+	for(i = 0; i < n; i++) {
+		sum += (double)(1.0/6.0) * f(a + i*h) + (double) (2.0/3.0) * f((2*a + i*h + (i+1)*h)/2) + (double)(1.0/6.0) * f(a + (i+1)*h);
+	}
+	return h * sum;
+}
+
+
+main() {
+
+	printf("         h           ans          (ans - prev_answer) \n");
+
+	int n = 2;
+	double a = 0.0;
+	double b = 2.0;
+	double EPS = 1.e-8;
+
+	double ans = 10000000.0;
+	double prevans = 1.0;
+	double h = (b-a)/n;
+	
+	while(fabs(ans - prevans) > EPS) {
+		h = (b - a)/n;
+		prevans = ans;
+
+		ans = simpson(f, a, b, n);
+		n = n*2;
+		printf("%12.4f   %14.8f   %12.8f \n", h, ans, ans - prevans);
+	}
+}
+
+Output:
+
+		        h           ans          (ans - prev_answer) 
+      1.0000       0.46593497   -9999999.53406503 
+      0.5000       0.46658840     0.00065344 
+      0.2500       0.46662712     0.00003872 
+      0.1250       0.46662950     0.00000239 
+      0.0625       0.46662965     0.00000015 
+      0.0312       0.46662966     0.00000001 
+
+============================================================================
+
+   #include <stdio.h>
+
+#include <math.h>
+
+double romberg(double f(double), double a, double b, int n, int m) {
+	if((n == 0) && (m == 0)) {
+		return (double)(1/2) * (b - a) * (f(a) + f(b));
+	}
+	else if(m == 0) {
+		double coefficient = (b - a)/pow(2, n);
+		double sum = 0;
+		int k;
+		for(k = 0; k < (pow(2, n-1)+1); k++) {
+			sum += f(a + (2*k - 1)*coefficient);
+		}
+		return 0.5 * romberg(f, a, b, n-1, 0) + coefficient*sum;
+	}
+	double r1 = romberg(f, a, b, n, m-1);
+	double r2 = romberg(f, a, b, n-1, m-1);
+
+	double coefficient = 1/(pow(4,(double)m) - 1);
+	return coefficient * (pow(4,m)*r1 - r2);
+}
+
+double f(double x) {
+	return exp(-x*x/2.0);
+}
+
+main() {
+
+	double EPS = 1.e-12;
+	double ans = 10000000;
+	double prevans = 1;
+	int n = 1;
+	int m = 2;
+	double a = 0.0;
+	double b = 1.0;
+
+	printf("    m      n       ans         (anser - prev answer) \n");
+	while(fabs(ans - prevans) > EPS) {
+		prevans = ans;
+		ans = romberg(f, a, b, n, m);
+		printf(" %d %d %12.8f %12.8f \n", m, n, ans, ans - prevans);
+		n = n*2;
+	}
+}
+
+
+Output:

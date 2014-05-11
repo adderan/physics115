@@ -1,0 +1,14 @@
+#include <stdio.h>
+
+main() {
+  int i;
+  float previous = 1.0;
+  while(true) {
+    float next = 10*previous;
+    printf("%d \n", next);
+    if(next != 10*previous) {
+      break;
+    }
+    previous = next;
+  }
+}

@@ -1,0 +1,14 @@
+             Single precision                                                 Double precision 
+N =        100 S(up) =   5.187378   S(down) =   5.187377     S(up) =   5.187378  S(down) =   5.187378 
+N =       1000 S(up) =   7.485478   S(down) =   7.485472     S(up) =   7.485471  S(down) =   7.485471 
+N =      10000 S(up) =   9.787613   S(down) =   9.787604     S(up) =   9.787606  S(down) =   9.787606 
+N =     100000 S(up) =  12.090851   S(down) =  12.090153     S(up) =  12.090146  S(down) =  12.090146 
+N =    1000000 S(up) =  14.357358   S(down) =  14.392652     S(up) =  14.392727  S(down) =  14.392727 
+N =   10000000 S(up) =  15.403683   S(down) =  16.686031     S(up) =  16.695311  S(down) =  16.695311 
+
+p =     2  S(up) error =    0.000000  S(down) error =  -0.000000 
+p =     3  S(up) error =    0.000001  S(down) error =   0.000000 
+p =     4  S(up) error =    0.000001  S(down) error =  -0.000000 
+p =     5  S(up) error =    0.000058  S(down) error =   0.000001 
+p =     6  S(up) error =   -0.002457  S(down) error =  -0.000005 
+p =     7  S(up) error =   -0.077365  S(down) error =  -0.000556 

@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <math.h>
+
+
+double rk4(double f(double, double), double x0, double y0, double xfinal, int n) {
+	double k1;
+	double k2;
+	double k3;
+	double k4;
+	double x = x0;
+	double y = y0;
+	double yprev = y0;
+
+	double h = fabs(xfinal-x0)/n;
+
+	int i;
+	for(i = 0; i < n; i++) {
+		yprev = y;
+		k1 = f(x, y);
+		k2 = f(x + 0.5*h, y + (h/2)*k1);
+		k3 = f(x + (h/2), y + (h/2)*k2);
+		k4 = f(x + h, y + h*k3);
+
+		y = y + (h/6)*(k1 + 2*k2 + 2*k3 + k4);
+		x = x + h;
+	}
+	return y;
+}

@@ -1,0 +1,4 @@
+#include <math.h>
+#include <stdio.h>
+
+double rk2(double f(double), double x0, double y0, double xfinal 

@@ -1,0 +1,26 @@
+#include <math.h>
+#include <stdio.h>
+
+/*
+double f(double x) {
+	return pow(x, 3.0) - 5*x + 3;
+}
+*/
+
+double fprime(double x) {
+	return 3*pow(x, 2.0) - 5;
+}
+
+main() {
+	double a1 = -100.0;
+	double b1 = bracketRoot(f, a1, 0.5);
+	double a2 = b1;
+	double b2 = bracketRoot(f, a2, 0.5);
+	double rootguess1 = bisection(f, a1, b1, 1.e-4);
+	double rootguess1 = bisection(f, a2, b2, 1.e-4);
+	double rootprecise1 = newton(f, fprime, rootguess1, 1.e-12);
+	double rootprecise2 = newton(f, fprime, rootguess2, 1.e-12);
+
+}
+
+

@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+main() {
+
+  float e = 1.0;
+  int i;
+  printf("epsilon  1 - (1 - epsilon)");
+  for(i = 0; i < 10; i++) {
+    float x = 1 - e;
+    float y = 1 - x;
+    printf("%1.5e %1.5e \n", e, y);
+    e = e/10;
+  }
+}
+
