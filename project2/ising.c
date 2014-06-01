@@ -4,7 +4,7 @@
 #include <time.h>
 
 #define J 1.0
-#define k 1.38*pow(10, -23)
+#define k 1.0
 
 
 double magnetization(int **lattice, int L) {
@@ -22,7 +22,7 @@ double energy(int neighbors[], int Si) {
 	double e = 0.0;
 	int i;
 	for(i = 0; i < 3; i++) {
-		e += (-2.0)*J*Si*neighbors[i];
+		e += 2.0*J*Si*neighbors[i];
 	}
 	return e;
 }
@@ -57,26 +57,105 @@ void sweep(int L, int **lattice, double T) {
 		}
 	}
 }
-
-int main() {
-	double T = 100.0;
-	srand(time(NULL));
-	int L = 10;
-	int **lattice = (int**)malloc(sizeof(int*)*L);
+void initializeSpins(int **lattice, int L) {
+	int i, j;
+	for(i = 0; i < L; i++) {
+		for(j = 0; j < L; j++) {
+			double r = rand()/(RAND_MAX + 1.0);
+			if(r >= 0.5) {
+				lattice[i][j] = -1;
+			}
+			else {
+				lattice[i][j] = 1;
+			}
+		}
+	}
+}
+void printLattice(int **lattice, int L) {
 	int i,j;
 	for(i = 0; i < L; i++) {
-		lattice[i] = (int*)malloc(sizeof(int)*L);
 		for(j = 0; j < L; j++) {
-			lattice[i][j] = 1;
+			if(lattice[i][j] == 1) {
+				printf("+ ");
+			}
+			else {
+				printf("- ");
+			}
+			//printf("%2d ", lattice[i][j]);
 		}
+		printf("\n");
+	}
+	printf("\n");
+}
+double* stats(double T, int N, double X[N]) {
+	double mean = 0;
+	int i;
+	for(i = 0; i < N; i++) {
+		mean += X[i];
+	}
+	mean /= N;
+
+	double ssquared = 0;
+	for(i = 0; i < N; i++) {
+		ssquared += pow((X[i] - mean), 2);
+	}
+	ssquared /= N;
+
+	double sigma = sqrt(ssquared)/sqrt(N - 1);
+	double *results = (double*)malloc(sizeof(double)*2);
+	results[0] = mean;
+	results[1] = sigma;
+	//printf("<m^2> = %5.6f +- %5.6f \n", mean, sigma);
+	printf("%2.4f %5.6f  %5.6f \n", T, mean, sigma);
+	return results;
+}
+void run(int **lattice, double T, int L, int N, int mdrop, int sweeps) {
+	int i,j;
+	double m2measurements[N];
+	for(j = 0; j < N; j++) {
+		initializeSpins(lattice, L);
+		//printLattice(lattice, L);
+
+		//equilibrate
+		for(i = 0; i < mdrop; i++) {
+			sweep(L, lattice, T);
+		}
+		//printLattice(lattice, L);
+
+		//measure <m^2>
+		double m2 = 0;
+		for(i = 0; i < sweeps; i++) {
+			sweep(L, lattice, T);
+			m2 += pow(magnetization(lattice, L), 2);
+		}
+		m2 /= sweeps;
+		m2measurements[j] = m2;
+	}
+	stats(T, N, m2measurements);
+}
+	
+int main(int argc, char **argv) {
+	srand(time(NULL));
+	int L = atoi(argv[1]);
+	int **lattice = (int**)malloc(sizeof(int*)*L);
+	int i;
+	
+	for(i = 0; i < L; i++) {
+		lattice[i] = (int*)malloc(sizeof(int)*L);
 	
 	}
-	int sweeps = 100;
-	for(i = 0; i < sweeps; i++) {
-		sweep(L, lattice, T);
-		printf("%5.6f \n", magnetization(lattice, L));
-	}
 
+	int sweeps = 1000;
+	int N = 100;
+	int mdrop = 100;
+	double Tmin = 0.0;
+	double Tmax = 3.0;
+	double Tstep = 0.05;
+	double T = Tmin;
+	while(T < Tmax) {
+		run(lattice, T, L, N, mdrop, sweeps);
+		T += Tstep;
+	}
 	return 0;
 }
 
