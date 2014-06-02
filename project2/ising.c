@@ -61,6 +61,7 @@ void initializeSpins(int **lattice, int L) {
 	int i, j;
 	for(i = 0; i < L; i++) {
 		for(j = 0; j < L; j++) {
+		  /*
 			double r = rand()/(RAND_MAX + 1.0);
 			if(r >= 0.5) {
 				lattice[i][j] = -1;
@@ -68,6 +69,8 @@ void initializeSpins(int **lattice, int L) {
 			else {
 				lattice[i][j] = 1;
 			}
+		  */
+		  lattice[i][j] = 1;
 		}
 	}
 }
